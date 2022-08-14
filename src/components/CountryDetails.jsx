@@ -1,42 +1,48 @@
 import React from 'react';
 import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
+import axios from 'axios';
 
 function CountryDetails() {
+  //1. param
   const { country } = useParams();
+  //2. estado
   const [countryDetails, setCountryDetails] = useState();
   const [isFetching, setIsFetching] = useState(true);
-
+  //3.useEffect
   useEffect(() => {
     getCountryDetails();
-  }, [country]);
+  }, []);
 
+  //4. axios
   const getCountryDetails = async () => {
-    const allCountries = await fetch(
-      'https://ih-countries-api.herokuapp.com/countries/${country}'
+    const response = await axios(
+      `https://ih-countries-api.herokuapp.com/countries/${country}`
     );
-    const allCountriesJSON = await allCountries.json();
-    setCountryDetails(allCountriesJSON.results);
+    setCountryDetails(response.results);
     setIsFetching(false);
   };
-  if (isFetching) {
+
+  // 5.clausula para rescribir info
+  if (isFetching === true) {
     return <h2>...LOADING</h2>;
   }
 
+  //6.renderizar
   return (
     <div class="col-7">
-      <h1>{countryDetails.name.official}</h1>
+      <h1>{countryDetails.name.common}</h1>
       <table class="table">
         <thead></thead>
         <tbody>
           <tr>
             <td style={{ width: '30%' }}>Capital</td>
-            <td>Paris</td>
+            <td>{countryDetails.capital}</td>
           </tr>
           <tr>
             <td>Area</td>
             <td>
-              551695 km
+              {countryDetails.altSpellings.area}
               <sup>2</sup>
             </td>
           </tr>
