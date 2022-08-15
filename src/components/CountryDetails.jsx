@@ -2,6 +2,7 @@ import React from 'react';
 import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
+import { Link } from 'react-router-dom';
 
 function CountryDetails() {
   //1. param
@@ -12,14 +13,14 @@ function CountryDetails() {
   //3.useEffect
   useEffect(() => {
     getCountryDetails();
-  }, []);
+  }, [country]);
 
   //4. axios
   const getCountryDetails = async () => {
     const response = await axios(
       `https://ih-countries-api.herokuapp.com/countries/${country}`
     );
-    setCountryDetails(response.results);
+    setCountryDetails(response.data);
     setIsFetching(false);
   };
 
@@ -50,7 +51,13 @@ function CountryDetails() {
             <td>Borders</td>
             <td>
               <ul>
-                <li></li>
+                {countryDetails.borders.map((eachBorder) => {
+                  return (
+                    <li>
+                      <Link to={`/${eachBorder}`}>{eachBorder}</Link>
+                    </li>
+                  );
+                })}
               </ul>
             </td>
           </tr>
